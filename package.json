@@ -1,0 +1,32 @@
+{
+  "name": "nesly-split",
+  "version": "0.0.1",
+  "description": "split out the CHR and PRG of a NES Rom",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nes",
+    "rom",
+    "split",
+    "chr",
+    "png"
+  ],
+  "author": "Michael Matuzak <michael@lambdaphant.com>",
+  "license": "MIT",
+  "dependencies": {
+    "through": "~2.3.4"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:emkay/nesly-split.git"
+  },
+  "bugs": {
+    "url": "https://github.com/emkay/nesly-split/issues"
+  }
+}
