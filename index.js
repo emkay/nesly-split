@@ -7,6 +7,7 @@ module.exports = function (file, cb) {
     var exists = fs.existsSync(file);
     var prg;
     var chr;
+    var mirror;
     
     var write = function (chunk) {
         // first 3 bytes should be NES
@@ -18,11 +19,18 @@ module.exports = function (file, cb) {
 
         // ineschr: 1x  8KB CHR data
         chr = chunk.slice(5,6).toString('hex');
+
+        // 1 for vertical mirroring, 0 for horizontal mirroring.
+        mirror = chunk.slice(6,7).toString('hex');
     };
 
     var end = function () {
         if (chr && prg) {
-            cb(null, {chr: chr, prg: prg});
+            cb(null, {
+                chr: chr, 
+                prg: prg,
+                mirror: mirror
+            });
         } else {
             cb('Error: failed to parse chr and prg.');
         }
