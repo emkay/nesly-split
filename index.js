@@ -1,3 +1,5 @@
+// file format chart: http://fms.komkon.org/EMUL8/NES.html#LABM
+
 var fs = require('fs'),
     through = require('through');
 
@@ -6,7 +8,7 @@ module.exports = function (file, cb) {
     var exists = fs.existsSync(file);
     var prg;
     var chr;
-    var mirror;
+    var byte6;
     
     var write = function (chunk) {
         // first 3 bytes should be NES
@@ -19,8 +21,13 @@ module.exports = function (file, cb) {
         // ineschr: 1x  8KB CHR data
         chr = chunk.slice(5,6).toString('hex');
 
-        // 1 for vertical mirroring, 0 for horizontal mirroring.
-        mirror = chunk.slice(6,7);
+        /*  bit 0 1 for vertical mirroring, 0 for horizontal mirroring.
+            bit 1 1 for battery-backed RAM at $6000-$7FFF.
+            bit 2 1 for a 512-byte trainer at $7000-$71FF.
+            bit 3 1 for a four-screen VRAM layout.
+            bit 4-7  Four lower bits of ROM Mapper Type.
+         */
+        byte6 = chunk.slice(6,7).toString();
     };
 
     var end = function () {
@@ -28,7 +35,7 @@ module.exports = function (file, cb) {
             cb(null, {
                 chr: chr, 
                 prg: prg,
-                mirror: mirror
+                byte6: byte6
             });
         } else {
             cb('Error: failed to parse chr and prg.');
