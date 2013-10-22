@@ -1,5 +1,4 @@
 var fs = require('fs'),
-    Buffer = require('buffer').Buffer,
     through = require('through');
 
 module.exports = function (file, cb) {
@@ -21,7 +20,7 @@ module.exports = function (file, cb) {
         chr = chunk.slice(5,6).toString('hex');
 
         // 1 for vertical mirroring, 0 for horizontal mirroring.
-        mirror = chunk.slice(6,7).toString('hex');
+        mirror = chunk.slice(6,7);
     };
 
     var end = function () {
