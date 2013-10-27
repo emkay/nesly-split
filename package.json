@@ -1,6 +1,6 @@
 {
   "name": "nesly-split",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "split out the CHR and PRG of a NES Rom",
   "main": "index.js",
   "directories": {
