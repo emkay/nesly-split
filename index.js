@@ -16,25 +16,29 @@ module.exports = function (file, cb) {
     var chrLen;
     var byte6;
     var chr;
+    var prg;
      
 
     var write = function (chunk) {
         // first 3 bytes should be NES
         var nesHeader = chunk.slice(0,3);
 
-        // TODO: this should be calculated with chrLen
-        var chrSize = 8192;
+        var chrBlockSize = 8192;
+        var prgBlockSize = 16384;
 
-        // TODO: this should be calculated with prgLen
-        var prgSize = 32768;
+        var prgSize = 0;
+        var chrSize = 0;
 
         if (nesHeader.toString() !== 'NES') console.log('WARN: might not be a NES file.');
         
         // inesprg: 1x 16KB PRG code
-        prgLen = chunk.slice(4,5).toString('hex');
+        prgLen = parseInt(chunk.slice(4,5).toString('hex'), 16);
 
         // ineschr: 1x  8KB CHR data
-        chrLen = chunk.slice(5,6).toString('hex');
+        chrLen = parseInt(chunk.slice(5,6).toString('hex'), 16);
+
+        prgSize = prgBlockSize * prgLen;
+        chrSize = chrBlockSize * chrLen;
 
         /*  bit 0 1 for vertical mirroring, 0 for horizontal mirroring.
             bit 1 1 for battery-backed RAM at $6000-$7FFF.
@@ -42,14 +46,16 @@ module.exports = function (file, cb) {
             bit 3 1 for a four-screen VRAM layout.
             bit 4-7  Four lower bits of ROM Mapper Type.
          */
-        byte6 = chunk.slice(6,7).toString('hex');
+        byte6 = chunk.slice(6,7).toString();
 
+        prg = chunk.slice(7, prgSize);
         chr = chunk.slice(prgSize, prgSize + chrSize);
     };
 
     var end = function () {
         if (chrLen && prgLen && chr) {
             cb(null, {
+                prg: prg,
                 chr: chr,
                 chrLen: chrLen, 
                 prgLen: prgLen,
