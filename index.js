@@ -80,6 +80,8 @@ module.exports = function (file, cb) {
                 prg: prg,
                 chr: chr,
                 chrLen: chrLen, 
+                chrSize: chrSize,
+                prgSize: prgSize,
                 prgLen: prgLen,
                 byte6: byte6
             });
