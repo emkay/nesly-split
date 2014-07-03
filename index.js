@@ -1,13 +1,7 @@
 // file format chart: http://fms.komkon.org/EMUL8/NES.html#LABM
 
-var fs = require('fs'),
-    through = require('through');
-
-
-function bytesToSize(bytes) {
-    var kilobyte = 1024;
-    return (kilobyte * bytes);
-}
+var fs = require('fs');
+var through = require('through');
 
 module.exports = function (file, cb) {
     var rom = false;
