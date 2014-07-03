@@ -25,6 +25,7 @@ module.exports = function (file, cb) {
     var byte6;
     var chr;
     var prg;
+    var endBytes;
      
 
     var write = function (chunk) {
@@ -57,6 +58,7 @@ module.exports = function (file, cb) {
             } else {
                 prg = chunk.slice(7, prgSize);
                 chr = chunk.slice(prgSize, prgSize + chrSize);
+                endBytes = chunk.slice(prgSize + chrSize, chunk.length);
                 prgSize = 0;
             }
         } else if (prgSize > 0) {
@@ -71,19 +73,22 @@ module.exports = function (file, cb) {
 
         if (!chr && chrSize !== 0 && prgSize === 0) {
             chr = chunk.slice(0, chrSize);
+            endBytes = chunk.slice(chrSize, chunk.length);
         }
     };
 
     var end = function () {
         if (chrLen && prgLen && chr) {
             cb(null, {
+                nesHeader: nesHeader,
                 prg: prg,
                 chr: chr,
                 chrLen: chrLen, 
                 chrSize: chrSize,
                 prgSize: prgSize,
                 prgLen: prgLen,
-                byte6: byte6
+                byte6: byte6,
+                endBytes: endBytes
             });
         } else {
             cb('Error: failed to parse chr and prg.');
