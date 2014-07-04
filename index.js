@@ -20,9 +20,13 @@ module.exports = function (file, cb) {
     var chr;
     var prg;
     var endBytes;
+
+    var romBuffers = [];
      
 
     var write = function (chunk) {
+        romBuffers.push(chunk);
+
         if (!nesHeader) {
             // first 3 bytes should be NES
             nesHeader = chunk.slice(0,3);
@@ -82,7 +86,8 @@ module.exports = function (file, cb) {
                 prgSize: prgSize,
                 prgLen: prgLen,
                 byte6: byte6,
-                endBytes: endBytes
+                endBytes: endBytes,
+                rom: Buffer.concat(romBuffers)
             });
         } else {
             cb('Error: failed to parse chr and prg.');
