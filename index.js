@@ -15,6 +15,7 @@ module.exports = function (file, cb) {
 
     var nesHeader;
     var prgLen;
+    var prgStart;
     var chrLen;
     var chrStart;
     var byte6;
@@ -51,11 +52,12 @@ module.exports = function (file, cb) {
         }
 
         if (!prg) {
+            prgStart = 7;
             if (chunk.length <= prgSize) {
-                prg = chunk.slice(7, prgSize - chunk.length);
+                prg = chunk.slice(prgStart, prgSize - chunk.length);
                 prgSize -= chunk.length;
             } else {
-                prg = chunk.slice(7, prgSize);
+                prg = chunk.slice(prgStart, prgSize);
                 chrStart = prgSize;
                 chr = chunk.slice(chrStart, prgSize + chrSize);
                 endBytes = chunk.slice(prgSize + chrSize, chunk.length);
@@ -88,6 +90,7 @@ module.exports = function (file, cb) {
                 chrStart: chrStart,
                 chrSize: chrSize,
                 prgSize: prgSize,
+                prgStart: prgStart,
                 prgLen: prgLen,
                 byte6: byte6,
                 endBytes: endBytes,
